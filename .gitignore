@@ -14,3 +14,5 @@ Thumbs.db
 
 # Výsledky z RapidMinera (malé tabuľky) chceme verzovať
 !reports/results/*.csv
+# Predikcie modelov sú veľké (20–50 MB) – vytvoria sa spustením procesu 03
+reports/results/03_predikcie_*.csv
