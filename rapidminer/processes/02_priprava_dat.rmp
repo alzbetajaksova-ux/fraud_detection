@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="10.0.000">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="10.0.000" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="42"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="retrieve" compatibility="10.0.000" expanded="true" height="68" name="Retrieve paysim_joined" width="90" x="45" y="136">
+        <parameter key="repository_entry" value="../data/paysim_joined"/>
+      </operator>
+      <operator activated="true" class="filter_examples" compatibility="10.0.000" expanded="true" height="103" name="Len TRANSFER a CASH_OUT" width="90" x="179" y="136">
+        <parameter key="parameter_expression" value=""/>
+        <parameter key="condition_class" value="custom_filters"/>
+        <parameter key="invert_filter" value="false"/>
+        <list key="filters_list">
+          <parameter key="filters_entry_key" value="type.equals.TRANSFER"/>
+          <parameter key="filters_entry_key" value="type.equals.CASH_OUT"/>
+        </list>
+        <parameter key="filters_logic_and" value="false"/>
+        <parameter key="filters_check_metadata" value="true"/>
+      </operator>
+      <operator activated="true" class="generate_attributes" compatibility="10.0.000" expanded="true" height="82" name="Odvodene atributy" width="90" x="313" y="136">
+        <list key="function_descriptions">
+          <parameter key="is_transfer" value="if(type==&quot;TRANSFER&quot;,1,0)"/>
+          <parameter key="hour" value="step % 24"/>
+          <parameter key="amount_log" value="ln(amount+1)"/>
+          <parameter key="errorBalanceOrig" value="newbalanceOrig + amount - oldbalanceOrg"/>
+          <parameter key="errorBalanceDest" value="oldbalanceDest + amount - newbalanceDest"/>
+          <parameter key="drains_account" value="if(abs(amount - oldbalanceOrg) &lt; 0.01,1,0)"/>
+          <parameter key="dest_zero_balances" value="if(oldbalanceDest==0 &amp;&amp; newbalanceDest==0,1,0)"/>
+        </list>
+        <parameter key="keep_all" value="true"/>
+      </operator>
+      <operator activated="true" class="select_attributes" compatibility="10.0.000" expanded="true" height="82" name="Vyradenie atributov" width="90" x="447" y="136">
+        <parameter key="attribute_filter_type" value="subset"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value="nameOrig|nameDest|step|type|amount|isFlaggedFraud"/>
+        <parameter key="invert_selection" value="true"/>
+        <parameter key="include_special_attributes" value="false"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="10.0.000" expanded="true" height="103" name="Multiply" width="90" x="581" y="136"/>
+      <operator activated="true" class="weight_by_information_gain" compatibility="10.0.000" expanded="true" height="82" name="Information Gain" width="90" x="715" y="34">
+        <parameter key="normalize_weights" value="false"/>
+        <parameter key="sort_weights" value="true"/>
+        <parameter key="sort_direction" value="descending"/>
+      </operator>
+      <operator activated="true" class="weights_to_data" compatibility="10.0.000" expanded="true" height="68" name="Vahy IG do tabulky" width="90" x="849" y="34"/>
+      <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write IG" width="90" x="983" y="34">
+        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\02_vahy_information_gain.csv"/>
+        <parameter key="column_separator" value=","/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="format_date_attributes" value="true"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="weight_by_correlation" compatibility="10.0.000" expanded="true" height="82" name="Korelacia s cielom" width="90" x="715" y="136">
+        <parameter key="normalize_weights" value="false"/>
+        <parameter key="sort_weights" value="true"/>
+        <parameter key="sort_direction" value="descending"/>
+        <parameter key="squared_correlation" value="false"/>
+      </operator>
+      <operator activated="true" class="weights_to_data" compatibility="10.0.000" expanded="true" height="68" name="Vahy korelacie do tabulky" width="90" x="849" y="136"/>
+      <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write korelacia" width="90" x="983" y="136">
+        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\02_vahy_korelacia.csv"/>
+        <parameter key="column_separator" value=","/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="format_date_attributes" value="true"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="split_data" compatibility="10.0.000" expanded="true" height="103" name="Split 70/30" width="90" x="715" y="289">
+        <enumeration key="partitions">
+          <parameter key="ratio" value="0.7"/>
+          <parameter key="ratio" value="0.3"/>
+        </enumeration>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="42"/>
+      </operator>
+      <operator activated="true" class="store" compatibility="10.0.000" expanded="true" height="68" name="Store train" width="90" x="849" y="289">
+        <parameter key="repository_entry" value="../data/train"/>
+      </operator>
+      <operator activated="true" class="store" compatibility="10.0.000" expanded="true" height="68" name="Store test" width="90" x="849" y="391">
+        <parameter key="repository_entry" value="../data/test"/>
+      </operator>
+      <connect from_op="Retrieve paysim_joined" from_port="output" to_op="Len TRANSFER a CASH_OUT" to_port="example set input"/>
+      <connect from_op="Len TRANSFER a CASH_OUT" from_port="example set output" to_op="Odvodene atributy" to_port="example set input"/>
+      <connect from_op="Odvodene atributy" from_port="example set output" to_op="Vyradenie atributov" to_port="example set input"/>
+      <connect from_op="Vyradenie atributov" from_port="example set output" to_op="Multiply" to_port="input"/>
+      <connect from_op="Multiply" from_port="output 1" to_op="Information Gain" to_port="example set"/>
+      <connect from_op="Multiply" from_port="output 2" to_op="Korelacia s cielom" to_port="example set"/>
+      <connect from_op="Multiply" from_port="output 3" to_op="Split 70/30" to_port="example set"/>
+      <connect from_op="Information Gain" from_port="weights" to_op="Vahy IG do tabulky" to_port="attribute weights"/>
+      <connect from_op="Vahy IG do tabulky" from_port="example set" to_op="Write IG" to_port="input"/>
+      <connect from_op="Korelacia s cielom" from_port="weights" to_op="Vahy korelacie do tabulky" to_port="attribute weights"/>
+      <connect from_op="Vahy korelacie do tabulky" from_port="example set" to_op="Write korelacia" to_port="input"/>
+      <connect from_op="Split 70/30" from_port="partition 1" to_op="Store train" to_port="input"/>
+      <connect from_op="Split 70/30" from_port="partition 2" to_op="Store test" to_port="input"/>
+      <connect from_op="Write IG" from_port="through" to_port="result 1"/>
+      <connect from_op="Write korelacia" from_port="through" to_port="result 2"/>
+      <connect from_op="Store train" from_port="through" to_port="result 3"/>
+      <connect from_op="Store test" from_port="through" to_port="result 4"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+      <portSpacing port="sink_result 4" spacing="0"/>
+      <portSpacing port="sink_result 5" spacing="0"/>
+    </process>
+  </operator>
+</process>
