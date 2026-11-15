@@ -2,7 +2,12 @@
   <context>
     <input/>
     <output/>
-    <macros/>
+    <macros>
+      <macro>
+        <key>projekt</key>
+        <value>C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection</value>
+      </macro>
+    </macros>
   </context>
   <operator activated="true" class="process" compatibility="10.0.000" expanded="true" name="Process">
     <parameter key="logverbosity" value="init"/>
@@ -88,7 +93,7 @@
         <parameter key="ignore_missings" value="true"/>
       </operator>
       <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write typ" width="90" x="715" y="34">
-        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\01_podvody_podla_typu.csv"/>
+        <parameter key="csv_file" value="%{projekt}\reports\results\01_podvody_podla_typu.csv"/>
         <parameter key="column_separator" value=","/>
         <parameter key="write_attribute_names" value="true"/>
         <parameter key="quote_nominal_values" value="true"/>
@@ -97,7 +102,7 @@
         <parameter key="encoding" value="UTF-8"/>
       </operator>
       <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write hodina" width="90" x="715" y="136">
-        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\01_podvody_podla_hodiny.csv"/>
+        <parameter key="csv_file" value="%{projekt}\reports\results\01_podvody_podla_hodiny.csv"/>
         <parameter key="column_separator" value=","/>
         <parameter key="write_attribute_names" value="true"/>
         <parameter key="quote_nominal_values" value="true"/>
@@ -106,7 +111,7 @@
         <parameter key="encoding" value="UTF-8"/>
       </operator>
       <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write statistiky" width="90" x="715" y="238">
-        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\01_statistiky_podla_triedy.csv"/>
+        <parameter key="csv_file" value="%{projekt}\reports\results\01_statistiky_podla_triedy.csv"/>
         <parameter key="column_separator" value=","/>
         <parameter key="write_attribute_names" value="true"/>
         <parameter key="quote_nominal_values" value="true"/>

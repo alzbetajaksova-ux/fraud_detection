@@ -2,7 +2,12 @@
   <context>
     <input/>
     <output/>
-    <macros/>
+    <macros>
+      <macro>
+        <key>projekt</key>
+        <value>C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection</value>
+      </macro>
+    </macros>
   </context>
   <operator activated="true" class="process" compatibility="10.0.000" expanded="true" name="Process">
     <parameter key="logverbosity" value="init"/>
@@ -114,7 +119,7 @@
         <parameter key="ignore_missings" value="true"/>
       </operator>
       <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write LR S1 train" width="90" x="2070" y="100">
-        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\03_kontingencna_S1_LR_train.csv"/>
+        <parameter key="csv_file" value="%{projekt}\reports\results\03_kontingencna_S1_LR_train.csv"/>
         <parameter key="column_separator" value=","/>
         <parameter key="write_attribute_names" value="true"/>
         <parameter key="quote_nominal_values" value="true"/>
@@ -150,7 +155,7 @@
         <parameter key="ignore_missings" value="true"/>
       </operator>
       <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write LR S1 test" width="90" x="2070" y="100">
-        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\03_kontingencna_S1_LR_test.csv"/>
+        <parameter key="csv_file" value="%{projekt}\reports\results\03_kontingencna_S1_LR_test.csv"/>
         <parameter key="column_separator" value=","/>
         <parameter key="write_attribute_names" value="true"/>
         <parameter key="quote_nominal_values" value="true"/>
@@ -164,7 +169,7 @@
         <parameter key="include_special_attributes" value="true"/>
       </operator>
       <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write predikcie LR S1 test" width="90" x="2070" y="200">
-        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\03_predikcie_S1_LR_test.csv"/>
+        <parameter key="csv_file" value="%{projekt}\reports\results\03_predikcie_S1_LR_test.csv"/>
         <parameter key="column_separator" value=","/>
         <parameter key="write_attribute_names" value="true"/>
         <parameter key="quote_nominal_values" value="true"/>
@@ -204,7 +209,7 @@
         <parameter key="ignore_missings" value="true"/>
       </operator>
       <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write DT S1 train" width="90" x="2070" y="350">
-        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\03_kontingencna_S1_DT_train.csv"/>
+        <parameter key="csv_file" value="%{projekt}\reports\results\03_kontingencna_S1_DT_train.csv"/>
         <parameter key="column_separator" value=","/>
         <parameter key="write_attribute_names" value="true"/>
         <parameter key="quote_nominal_values" value="true"/>
@@ -240,7 +245,7 @@
         <parameter key="ignore_missings" value="true"/>
       </operator>
       <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write DT S1 test" width="90" x="2070" y="350">
-        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\03_kontingencna_S1_DT_test.csv"/>
+        <parameter key="csv_file" value="%{projekt}\reports\results\03_kontingencna_S1_DT_test.csv"/>
         <parameter key="column_separator" value=","/>
         <parameter key="write_attribute_names" value="true"/>
         <parameter key="quote_nominal_values" value="true"/>
@@ -254,7 +259,7 @@
         <parameter key="include_special_attributes" value="true"/>
       </operator>
       <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write predikcie DT S1 test" width="90" x="2070" y="450">
-        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\03_predikcie_S1_DT_test.csv"/>
+        <parameter key="csv_file" value="%{projekt}\reports\results\03_predikcie_S1_DT_test.csv"/>
         <parameter key="column_separator" value=","/>
         <parameter key="write_attribute_names" value="true"/>
         <parameter key="quote_nominal_values" value="true"/>
@@ -323,7 +328,7 @@
         <parameter key="ignore_missings" value="true"/>
       </operator>
       <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write LR S2 train" width="90" x="2070" y="700">
-        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\03_kontingencna_S2_LR_train.csv"/>
+        <parameter key="csv_file" value="%{projekt}\reports\results\03_kontingencna_S2_LR_train.csv"/>
         <parameter key="column_separator" value=","/>
         <parameter key="write_attribute_names" value="true"/>
         <parameter key="quote_nominal_values" value="true"/>
@@ -337,7 +342,7 @@
         <parameter key="include_special_attributes" value="true"/>
       </operator>
       <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write predikcie LR S2 train" width="90" x="2070" y="800">
-        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\03_predikcie_S2_LR_train.csv"/>
+        <parameter key="csv_file" value="%{projekt}\reports\results\03_predikcie_S2_LR_train.csv"/>
         <parameter key="column_separator" value=","/>
         <parameter key="write_attribute_names" value="true"/>
         <parameter key="quote_nominal_values" value="true"/>
@@ -373,7 +378,7 @@
         <parameter key="ignore_missings" value="true"/>
       </operator>
       <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write LR S2 test" width="90" x="2070" y="700">
-        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\03_kontingencna_S2_LR_test.csv"/>
+        <parameter key="csv_file" value="%{projekt}\reports\results\03_kontingencna_S2_LR_test.csv"/>
         <parameter key="column_separator" value=","/>
         <parameter key="write_attribute_names" value="true"/>
         <parameter key="quote_nominal_values" value="true"/>
@@ -387,7 +392,7 @@
         <parameter key="include_special_attributes" value="true"/>
       </operator>
       <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write predikcie LR S2 test" width="90" x="2070" y="800">
-        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\03_predikcie_S2_LR_test.csv"/>
+        <parameter key="csv_file" value="%{projekt}\reports\results\03_predikcie_S2_LR_test.csv"/>
         <parameter key="column_separator" value=","/>
         <parameter key="write_attribute_names" value="true"/>
         <parameter key="quote_nominal_values" value="true"/>
@@ -427,7 +432,7 @@
         <parameter key="ignore_missings" value="true"/>
       </operator>
       <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write DT S2 train" width="90" x="2070" y="950">
-        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\03_kontingencna_S2_DT_train.csv"/>
+        <parameter key="csv_file" value="%{projekt}\reports\results\03_kontingencna_S2_DT_train.csv"/>
         <parameter key="column_separator" value=","/>
         <parameter key="write_attribute_names" value="true"/>
         <parameter key="quote_nominal_values" value="true"/>
@@ -463,7 +468,7 @@
         <parameter key="ignore_missings" value="true"/>
       </operator>
       <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write DT S2 test" width="90" x="2070" y="950">
-        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\03_kontingencna_S2_DT_test.csv"/>
+        <parameter key="csv_file" value="%{projekt}\reports\results\03_kontingencna_S2_DT_test.csv"/>
         <parameter key="column_separator" value=","/>
         <parameter key="write_attribute_names" value="true"/>
         <parameter key="quote_nominal_values" value="true"/>
@@ -477,7 +482,7 @@
         <parameter key="include_special_attributes" value="true"/>
       </operator>
       <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write predikcie DT S2 test" width="90" x="2070" y="1050">
-        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\03_predikcie_S2_DT_test.csv"/>
+        <parameter key="csv_file" value="%{projekt}\reports\results\03_predikcie_S2_DT_test.csv"/>
         <parameter key="column_separator" value=","/>
         <parameter key="write_attribute_names" value="true"/>
         <parameter key="quote_nominal_values" value="true"/>

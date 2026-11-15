@@ -2,7 +2,12 @@
   <context>
     <input/>
     <output/>
-    <macros/>
+    <macros>
+      <macro>
+        <key>projekt</key>
+        <value>C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection</value>
+      </macro>
+    </macros>
   </context>
   <operator activated="true" class="process" compatibility="10.0.000" expanded="true" name="Process">
     <parameter key="logverbosity" value="init"/>
@@ -51,7 +56,7 @@
       </operator>
       <operator activated="true" class="weights_to_data" compatibility="10.0.000" expanded="true" height="68" name="Vahy IG do tabulky" width="90" x="849" y="34"/>
       <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write IG" width="90" x="983" y="34">
-        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\02_vahy_information_gain.csv"/>
+        <parameter key="csv_file" value="%{projekt}\reports\results\02_vahy_information_gain.csv"/>
         <parameter key="column_separator" value=","/>
         <parameter key="write_attribute_names" value="true"/>
         <parameter key="quote_nominal_values" value="true"/>
@@ -67,7 +72,7 @@
       </operator>
       <operator activated="true" class="weights_to_data" compatibility="10.0.000" expanded="true" height="68" name="Vahy korelacie do tabulky" width="90" x="849" y="136"/>
       <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write korelacia" width="90" x="983" y="136">
-        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\02_vahy_korelacia.csv"/>
+        <parameter key="csv_file" value="%{projekt}\reports\results\02_vahy_korelacia.csv"/>
         <parameter key="column_separator" value=","/>
         <parameter key="write_attribute_names" value="true"/>
         <parameter key="quote_nominal_values" value="true"/>
