@@ -1,0 +1,13 @@
+# Dáta (CSV má 471 MB, GitHub berie max. 100 MB)
+data/
+*.csv
+*.zip
+
+# Python
+__pycache__/
+.venv/
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
