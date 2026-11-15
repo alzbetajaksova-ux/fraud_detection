@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="10.0.000">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="10.0.000" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="42"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="retrieve" compatibility="10.0.000" expanded="true" height="68" name="Retrieve train" width="90" x="45" y="100">
+        <parameter key="repository_entry" value="../data/train"/>
+      </operator>
+      <operator activated="true" class="retrieve" compatibility="10.0.000" expanded="true" height="68" name="Retrieve test" width="90" x="45" y="600">
+        <parameter key="repository_entry" value="../data/test"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="10.0.000" expanded="true" height="103" name="Multiply train" width="90" x="180" y="100">
+      </operator>
+      <operator activated="true" class="sample" compatibility="10.0.000" expanded="true" height="82" name="Undersampling 1:1 (len na ucenie)" width="90" x="315" y="40">
+        <parameter key="sample" value="absolute"/>
+        <parameter key="balance_data" value="true"/>
+        <parameter key="sample_size" value="100"/>
+        <parameter key="sample_ratio" value="0.1"/>
+        <parameter key="sample_probability" value="0.1"/>
+        <list key="sample_size_per_class">
+          <parameter key="0" value="5749"/>
+          <parameter key="1" value="5749"/>
+        </list>
+        <list key="sample_ratio_per_class"/>
+        <list key="sample_probability_per_class"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="42"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="10.0.000" expanded="true" height="103" name="Multiply uc" width="90" x="450" y="40">
+      </operator>
+      <operator activated="true" class="multiply" compatibility="10.0.000" expanded="true" height="103" name="Multiply eval" width="90" x="450" y="250">
+      </operator>
+      <operator activated="true" class="multiply" compatibility="10.0.000" expanded="true" height="103" name="Multiply test" width="90" x="450" y="600">
+      </operator>
+      <operator activated="true" class="select_attributes" compatibility="10.0.000" expanded="true" height="82" name="Select S1 ucenie" width="90" x="585" y="0">
+        <parameter key="attribute_filter_type" value="subset"/>
+        <parameter key="attributes" value="errorBalanceOrig|errorBalanceDest|drains_account|dest_zero_balances"/>
+        <parameter key="invert_selection" value="true"/>
+        <parameter key="include_special_attributes" value="false"/>
+      </operator>
+      <operator activated="true" class="select_attributes" compatibility="10.0.000" expanded="true" height="82" name="Select S1 eval" width="90" x="585" y="250">
+        <parameter key="attribute_filter_type" value="subset"/>
+        <parameter key="attributes" value="errorBalanceOrig|errorBalanceDest|drains_account|dest_zero_balances"/>
+        <parameter key="invert_selection" value="true"/>
+        <parameter key="include_special_attributes" value="false"/>
+      </operator>
+      <operator activated="true" class="select_attributes" compatibility="10.0.000" expanded="true" height="82" name="Select S1 test" width="90" x="585" y="600">
+        <parameter key="attribute_filter_type" value="subset"/>
+        <parameter key="attributes" value="errorBalanceOrig|errorBalanceDest|drains_account|dest_zero_balances"/>
+        <parameter key="invert_selection" value="true"/>
+        <parameter key="include_special_attributes" value="false"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="10.0.000" expanded="true" height="103" name="Multiply S1 uc" width="90" x="720" y="40">
+      </operator>
+      <operator activated="true" class="multiply" compatibility="10.0.000" expanded="true" height="103" name="Multiply S1 train" width="90" x="720" y="180">
+      </operator>
+      <operator activated="true" class="multiply" compatibility="10.0.000" expanded="true" height="103" name="Multiply S1 test" width="90" x="720" y="300">
+      </operator>
+      <operator activated="true" class="normalize" compatibility="10.0.000" expanded="true" height="103" name="Normalize S1" width="90" x="855" y="20">
+        <parameter key="return_preprocessing_model" value="false"/>
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="method" value="Z-transformation"/>
+        <parameter key="include_special_attributes" value="false"/>
+      </operator>
+      <operator activated="true" class="h2o:logistic_regression" compatibility="10.0.000" expanded="true" height="103" name="Logisticka regresia S1" width="90" x="990" y="20">
+        <parameter key="solver" value="AUTO"/>
+        <parameter key="reproducible" value="true"/>
+        <parameter key="use_regularization" value="false"/>
+        <parameter key="compute_p-values" value="false"/>
+        <parameter key="remove_collinear_columns" value="false"/>
+        <parameter key="missing_values_handling" value="MeanImputation"/>
+        <parameter key="max_iterations" value="0"/>
+        <parameter key="max_runtime_seconds" value="0"/>
+      </operator>
+      <operator activated="true" class="group_models" compatibility="10.0.000" expanded="true" height="103" name="Normalize + LR S1" width="90" x="1125" y="20">
+      </operator>
+      <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="10.0.000" expanded="true" height="82" name="Rozhodovaci strom S1" width="90" x="990" y="120">
+        <parameter key="criterion" value="gain_ratio"/>
+        <parameter key="maximal_depth" value="8"/>
+        <parameter key="apply_pruning" value="false"/>
+        <parameter key="apply_prepruning" value="false"/>
+        <parameter key="minimal_leaf_size" value="2"/>
+        <parameter key="minimal_size_for_split" value="4"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="10.0.000" expanded="true" height="82" name="Apply LR S1 train" width="90" x="1260" y="100">
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="10.0.000" expanded="true" height="82" name="Apply LR S1 test" width="90" x="1395" y="100">
+      </operator>
+      <operator activated="true" class="performance_binominal_classification" compatibility="10.0.000" expanded="true" height="82" name="Performance LR S1 train" width="90" x="1530" y="100">
+        <parameter key="accuracy" value="true"/>
+        <parameter key="AUC" value="true"/>
+        <parameter key="precision" value="true"/>
+        <parameter key="recall" value="true"/>
+        <parameter key="f_measure" value="true"/>
+        <parameter key="sensitivity" value="true"/>
+        <parameter key="specificity" value="true"/>
+        <parameter key="main_criterion" value="first"/>
+        <parameter key="skip_undefined_labels" value="true"/>
+        <parameter key="use_example_weights" value="false"/>
+      </operator>
+      <operator activated="true" class="aggregate" compatibility="10.0.000" expanded="true" height="82" name="Kontingencna LR S1 train" width="90" x="1665" y="100">
+        <parameter key="use_default_aggregation" value="false"/>
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="default_aggregation_function" value="average"/>
+        <list key="aggregation_attributes">
+          <parameter key="isFraud" value="count"/>
+        </list>
+        <parameter key="group_by_attributes" value="isFraud|prediction(isFraud)"/>
+        <parameter key="count_all_combinations" value="false"/>
+        <parameter key="only_distinct" value="false"/>
+        <parameter key="ignore_missings" value="true"/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write LR S1 train" width="90" x="1800" y="100">
+        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\03_kontingencna_S1_LR_train.csv"/>
+        <parameter key="column_separator" value=","/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="performance_binominal_classification" compatibility="10.0.000" expanded="true" height="82" name="Performance LR S1 test" width="90" x="1530" y="100">
+        <parameter key="accuracy" value="true"/>
+        <parameter key="AUC" value="true"/>
+        <parameter key="precision" value="true"/>
+        <parameter key="recall" value="true"/>
+        <parameter key="f_measure" value="true"/>
+        <parameter key="sensitivity" value="true"/>
+        <parameter key="specificity" value="true"/>
+        <parameter key="main_criterion" value="first"/>
+        <parameter key="skip_undefined_labels" value="true"/>
+        <parameter key="use_example_weights" value="false"/>
+      </operator>
+      <operator activated="true" class="aggregate" compatibility="10.0.000" expanded="true" height="82" name="Kontingencna LR S1 test" width="90" x="1665" y="100">
+        <parameter key="use_default_aggregation" value="false"/>
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="default_aggregation_function" value="average"/>
+        <list key="aggregation_attributes">
+          <parameter key="isFraud" value="count"/>
+        </list>
+        <parameter key="group_by_attributes" value="isFraud|prediction(isFraud)"/>
+        <parameter key="count_all_combinations" value="false"/>
+        <parameter key="only_distinct" value="false"/>
+        <parameter key="ignore_missings" value="true"/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write LR S1 test" width="90" x="1800" y="100">
+        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\03_kontingencna_S1_LR_test.csv"/>
+        <parameter key="column_separator" value=","/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="10.0.000" expanded="true" height="82" name="Apply DT S1 train" width="90" x="1260" y="220">
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="10.0.000" expanded="true" height="82" name="Apply DT S1 test" width="90" x="1395" y="220">
+      </operator>
+      <operator activated="true" class="performance_binominal_classification" compatibility="10.0.000" expanded="true" height="82" name="Performance DT S1 train" width="90" x="1530" y="100">
+        <parameter key="accuracy" value="true"/>
+        <parameter key="AUC" value="true"/>
+        <parameter key="precision" value="true"/>
+        <parameter key="recall" value="true"/>
+        <parameter key="f_measure" value="true"/>
+        <parameter key="sensitivity" value="true"/>
+        <parameter key="specificity" value="true"/>
+        <parameter key="main_criterion" value="first"/>
+        <parameter key="skip_undefined_labels" value="true"/>
+        <parameter key="use_example_weights" value="false"/>
+      </operator>
+      <operator activated="true" class="aggregate" compatibility="10.0.000" expanded="true" height="82" name="Kontingencna DT S1 train" width="90" x="1665" y="100">
+        <parameter key="use_default_aggregation" value="false"/>
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="default_aggregation_function" value="average"/>
+        <list key="aggregation_attributes">
+          <parameter key="isFraud" value="count"/>
+        </list>
+        <parameter key="group_by_attributes" value="isFraud|prediction(isFraud)"/>
+        <parameter key="count_all_combinations" value="false"/>
+        <parameter key="only_distinct" value="false"/>
+        <parameter key="ignore_missings" value="true"/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write DT S1 train" width="90" x="1800" y="100">
+        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\03_kontingencna_S1_DT_train.csv"/>
+        <parameter key="column_separator" value=","/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="performance_binominal_classification" compatibility="10.0.000" expanded="true" height="82" name="Performance DT S1 test" width="90" x="1530" y="100">
+        <parameter key="accuracy" value="true"/>
+        <parameter key="AUC" value="true"/>
+        <parameter key="precision" value="true"/>
+        <parameter key="recall" value="true"/>
+        <parameter key="f_measure" value="true"/>
+        <parameter key="sensitivity" value="true"/>
+        <parameter key="specificity" value="true"/>
+        <parameter key="main_criterion" value="first"/>
+        <parameter key="skip_undefined_labels" value="true"/>
+        <parameter key="use_example_weights" value="false"/>
+      </operator>
+      <operator activated="true" class="aggregate" compatibility="10.0.000" expanded="true" height="82" name="Kontingencna DT S1 test" width="90" x="1665" y="100">
+        <parameter key="use_default_aggregation" value="false"/>
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="default_aggregation_function" value="average"/>
+        <list key="aggregation_attributes">
+          <parameter key="isFraud" value="count"/>
+        </list>
+        <parameter key="group_by_attributes" value="isFraud|prediction(isFraud)"/>
+        <parameter key="count_all_combinations" value="false"/>
+        <parameter key="only_distinct" value="false"/>
+        <parameter key="ignore_missings" value="true"/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write DT S1 test" width="90" x="1800" y="100">
+        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\03_kontingencna_S1_DT_test.csv"/>
+        <parameter key="column_separator" value=","/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="10.0.000" expanded="true" height="103" name="Multiply S2 uc" width="90" x="720" y="440">
+      </operator>
+      <operator activated="true" class="multiply" compatibility="10.0.000" expanded="true" height="103" name="Multiply S2 train" width="90" x="720" y="580">
+      </operator>
+      <operator activated="true" class="multiply" compatibility="10.0.000" expanded="true" height="103" name="Multiply S2 test" width="90" x="720" y="700">
+      </operator>
+      <operator activated="true" class="normalize" compatibility="10.0.000" expanded="true" height="103" name="Normalize S2" width="90" x="855" y="420">
+        <parameter key="return_preprocessing_model" value="false"/>
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="method" value="Z-transformation"/>
+        <parameter key="include_special_attributes" value="false"/>
+      </operator>
+      <operator activated="true" class="h2o:logistic_regression" compatibility="10.0.000" expanded="true" height="103" name="Logisticka regresia S2" width="90" x="990" y="420">
+        <parameter key="solver" value="AUTO"/>
+        <parameter key="reproducible" value="true"/>
+        <parameter key="use_regularization" value="false"/>
+        <parameter key="compute_p-values" value="false"/>
+        <parameter key="remove_collinear_columns" value="false"/>
+        <parameter key="missing_values_handling" value="MeanImputation"/>
+        <parameter key="max_iterations" value="0"/>
+        <parameter key="max_runtime_seconds" value="0"/>
+      </operator>
+      <operator activated="true" class="group_models" compatibility="10.0.000" expanded="true" height="103" name="Normalize + LR S2" width="90" x="1125" y="420">
+      </operator>
+      <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="10.0.000" expanded="true" height="82" name="Rozhodovaci strom S2" width="90" x="990" y="520">
+        <parameter key="criterion" value="gain_ratio"/>
+        <parameter key="maximal_depth" value="8"/>
+        <parameter key="apply_pruning" value="false"/>
+        <parameter key="apply_prepruning" value="false"/>
+        <parameter key="minimal_leaf_size" value="2"/>
+        <parameter key="minimal_size_for_split" value="4"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="10.0.000" expanded="true" height="82" name="Apply LR S2 train" width="90" x="1260" y="500">
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="10.0.000" expanded="true" height="82" name="Apply LR S2 test" width="90" x="1395" y="500">
+      </operator>
+      <operator activated="true" class="performance_binominal_classification" compatibility="10.0.000" expanded="true" height="82" name="Performance LR S2 train" width="90" x="1530" y="500">
+        <parameter key="accuracy" value="true"/>
+        <parameter key="AUC" value="true"/>
+        <parameter key="precision" value="true"/>
+        <parameter key="recall" value="true"/>
+        <parameter key="f_measure" value="true"/>
+        <parameter key="sensitivity" value="true"/>
+        <parameter key="specificity" value="true"/>
+        <parameter key="main_criterion" value="first"/>
+        <parameter key="skip_undefined_labels" value="true"/>
+        <parameter key="use_example_weights" value="false"/>
+      </operator>
+      <operator activated="true" class="aggregate" compatibility="10.0.000" expanded="true" height="82" name="Kontingencna LR S2 train" width="90" x="1665" y="500">
+        <parameter key="use_default_aggregation" value="false"/>
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="default_aggregation_function" value="average"/>
+        <list key="aggregation_attributes">
+          <parameter key="isFraud" value="count"/>
+        </list>
+        <parameter key="group_by_attributes" value="isFraud|prediction(isFraud)"/>
+        <parameter key="count_all_combinations" value="false"/>
+        <parameter key="only_distinct" value="false"/>
+        <parameter key="ignore_missings" value="true"/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write LR S2 train" width="90" x="1800" y="500">
+        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\03_kontingencna_S2_LR_train.csv"/>
+        <parameter key="column_separator" value=","/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="performance_binominal_classification" compatibility="10.0.000" expanded="true" height="82" name="Performance LR S2 test" width="90" x="1530" y="500">
+        <parameter key="accuracy" value="true"/>
+        <parameter key="AUC" value="true"/>
+        <parameter key="precision" value="true"/>
+        <parameter key="recall" value="true"/>
+        <parameter key="f_measure" value="true"/>
+        <parameter key="sensitivity" value="true"/>
+        <parameter key="specificity" value="true"/>
+        <parameter key="main_criterion" value="first"/>
+        <parameter key="skip_undefined_labels" value="true"/>
+        <parameter key="use_example_weights" value="false"/>
+      </operator>
+      <operator activated="true" class="aggregate" compatibility="10.0.000" expanded="true" height="82" name="Kontingencna LR S2 test" width="90" x="1665" y="500">
+        <parameter key="use_default_aggregation" value="false"/>
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="default_aggregation_function" value="average"/>
+        <list key="aggregation_attributes">
+          <parameter key="isFraud" value="count"/>
+        </list>
+        <parameter key="group_by_attributes" value="isFraud|prediction(isFraud)"/>
+        <parameter key="count_all_combinations" value="false"/>
+        <parameter key="only_distinct" value="false"/>
+        <parameter key="ignore_missings" value="true"/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write LR S2 test" width="90" x="1800" y="500">
+        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\03_kontingencna_S2_LR_test.csv"/>
+        <parameter key="column_separator" value=","/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="10.0.000" expanded="true" height="82" name="Apply DT S2 train" width="90" x="1260" y="620">
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="10.0.000" expanded="true" height="82" name="Apply DT S2 test" width="90" x="1395" y="620">
+      </operator>
+      <operator activated="true" class="performance_binominal_classification" compatibility="10.0.000" expanded="true" height="82" name="Performance DT S2 train" width="90" x="1530" y="500">
+        <parameter key="accuracy" value="true"/>
+        <parameter key="AUC" value="true"/>
+        <parameter key="precision" value="true"/>
+        <parameter key="recall" value="true"/>
+        <parameter key="f_measure" value="true"/>
+        <parameter key="sensitivity" value="true"/>
+        <parameter key="specificity" value="true"/>
+        <parameter key="main_criterion" value="first"/>
+        <parameter key="skip_undefined_labels" value="true"/>
+        <parameter key="use_example_weights" value="false"/>
+      </operator>
+      <operator activated="true" class="aggregate" compatibility="10.0.000" expanded="true" height="82" name="Kontingencna DT S2 train" width="90" x="1665" y="500">
+        <parameter key="use_default_aggregation" value="false"/>
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="default_aggregation_function" value="average"/>
+        <list key="aggregation_attributes">
+          <parameter key="isFraud" value="count"/>
+        </list>
+        <parameter key="group_by_attributes" value="isFraud|prediction(isFraud)"/>
+        <parameter key="count_all_combinations" value="false"/>
+        <parameter key="only_distinct" value="false"/>
+        <parameter key="ignore_missings" value="true"/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write DT S2 train" width="90" x="1800" y="500">
+        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\03_kontingencna_S2_DT_train.csv"/>
+        <parameter key="column_separator" value=","/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="performance_binominal_classification" compatibility="10.0.000" expanded="true" height="82" name="Performance DT S2 test" width="90" x="1530" y="500">
+        <parameter key="accuracy" value="true"/>
+        <parameter key="AUC" value="true"/>
+        <parameter key="precision" value="true"/>
+        <parameter key="recall" value="true"/>
+        <parameter key="f_measure" value="true"/>
+        <parameter key="sensitivity" value="true"/>
+        <parameter key="specificity" value="true"/>
+        <parameter key="main_criterion" value="first"/>
+        <parameter key="skip_undefined_labels" value="true"/>
+        <parameter key="use_example_weights" value="false"/>
+      </operator>
+      <operator activated="true" class="aggregate" compatibility="10.0.000" expanded="true" height="82" name="Kontingencna DT S2 test" width="90" x="1665" y="500">
+        <parameter key="use_default_aggregation" value="false"/>
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="default_aggregation_function" value="average"/>
+        <list key="aggregation_attributes">
+          <parameter key="isFraud" value="count"/>
+        </list>
+        <parameter key="group_by_attributes" value="isFraud|prediction(isFraud)"/>
+        <parameter key="count_all_combinations" value="false"/>
+        <parameter key="only_distinct" value="false"/>
+        <parameter key="ignore_missings" value="true"/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="10.0.000" expanded="true" height="82" name="Write DT S2 test" width="90" x="1800" y="500">
+        <parameter key="csv_file" value="C:\Users\alzbe\OneDrive\Počítač\tuke hi\4ZS\OZ\zadanie\fraud_detection\reports\results\03_kontingencna_S2_DT_test.csv"/>
+        <parameter key="column_separator" value=","/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <connect from_op="Retrieve train" from_port="output" to_op="Multiply train" to_port="input"/>
+      <connect from_op="Multiply train" from_port="output 1" to_op="Undersampling 1:1 (len na ucenie)" to_port="example set input"/>
+      <connect from_op="Undersampling 1:1 (len na ucenie)" from_port="example set output" to_op="Multiply uc" to_port="input"/>
+      <connect from_op="Multiply train" from_port="output 2" to_op="Multiply eval" to_port="input"/>
+      <connect from_op="Retrieve test" from_port="output" to_op="Multiply test" to_port="input"/>
+      <connect from_op="Multiply uc" from_port="output 1" to_op="Select S1 ucenie" to_port="example set input"/>
+      <connect from_op="Multiply eval" from_port="output 1" to_op="Select S1 eval" to_port="example set input"/>
+      <connect from_op="Multiply test" from_port="output 1" to_op="Select S1 test" to_port="example set input"/>
+      <connect from_op="Select S1 ucenie" from_port="example set output" to_op="Multiply S1 uc" to_port="input"/>
+      <connect from_op="Select S1 eval" from_port="example set output" to_op="Multiply S1 train" to_port="input"/>
+      <connect from_op="Select S1 test" from_port="example set output" to_op="Multiply S1 test" to_port="input"/>
+      <connect from_op="Multiply S1 uc" from_port="output 1" to_op="Normalize S1" to_port="example set input"/>
+      <connect from_op="Normalize S1" from_port="example set output" to_op="Logisticka regresia S1" to_port="training set"/>
+      <connect from_op="Normalize S1" from_port="preprocessing model" to_op="Normalize + LR S1" to_port="models in 1"/>
+      <connect from_op="Logisticka regresia S1" from_port="model" to_op="Normalize + LR S1" to_port="models in 2"/>
+      <connect from_op="Multiply S1 uc" from_port="output 2" to_op="Rozhodovaci strom S1" to_port="training set"/>
+      <connect from_op="Normalize + LR S1" from_port="model out" to_op="Apply LR S1 train" to_port="model"/>
+      <connect from_op="Multiply S1 train" from_port="output 1" to_op="Apply LR S1 train" to_port="unlabelled data"/>
+      <connect from_op="Apply LR S1 train" from_port="model" to_op="Apply LR S1 test" to_port="model"/>
+      <connect from_op="Multiply S1 test" from_port="output 1" to_op="Apply LR S1 test" to_port="unlabelled data"/>
+      <connect from_op="Apply LR S1 train" from_port="labelled data" to_op="Performance LR S1 train" to_port="labelled data"/>
+      <connect from_op="Performance LR S1 train" from_port="example set" to_op="Kontingencna LR S1 train" to_port="example set input"/>
+      <connect from_op="Kontingencna LR S1 train" from_port="example set output" to_op="Write LR S1 train" to_port="input"/>
+      <connect from_op="Apply LR S1 test" from_port="labelled data" to_op="Performance LR S1 test" to_port="labelled data"/>
+      <connect from_op="Performance LR S1 test" from_port="example set" to_op="Kontingencna LR S1 test" to_port="example set input"/>
+      <connect from_op="Kontingencna LR S1 test" from_port="example set output" to_op="Write LR S1 test" to_port="input"/>
+      <connect from_op="Rozhodovaci strom S1" from_port="model" to_op="Apply DT S1 train" to_port="model"/>
+      <connect from_op="Multiply S1 train" from_port="output 2" to_op="Apply DT S1 train" to_port="unlabelled data"/>
+      <connect from_op="Apply DT S1 train" from_port="model" to_op="Apply DT S1 test" to_port="model"/>
+      <connect from_op="Multiply S1 test" from_port="output 2" to_op="Apply DT S1 test" to_port="unlabelled data"/>
+      <connect from_op="Apply DT S1 train" from_port="labelled data" to_op="Performance DT S1 train" to_port="labelled data"/>
+      <connect from_op="Performance DT S1 train" from_port="example set" to_op="Kontingencna DT S1 train" to_port="example set input"/>
+      <connect from_op="Kontingencna DT S1 train" from_port="example set output" to_op="Write DT S1 train" to_port="input"/>
+      <connect from_op="Apply DT S1 test" from_port="labelled data" to_op="Performance DT S1 test" to_port="labelled data"/>
+      <connect from_op="Performance DT S1 test" from_port="example set" to_op="Kontingencna DT S1 test" to_port="example set input"/>
+      <connect from_op="Kontingencna DT S1 test" from_port="example set output" to_op="Write DT S1 test" to_port="input"/>
+      <connect from_op="Multiply uc" from_port="output 2" to_op="Multiply S2 uc" to_port="input"/>
+      <connect from_op="Multiply eval" from_port="output 2" to_op="Multiply S2 train" to_port="input"/>
+      <connect from_op="Multiply test" from_port="output 2" to_op="Multiply S2 test" to_port="input"/>
+      <connect from_op="Multiply S2 uc" from_port="output 1" to_op="Normalize S2" to_port="example set input"/>
+      <connect from_op="Normalize S2" from_port="example set output" to_op="Logisticka regresia S2" to_port="training set"/>
+      <connect from_op="Normalize S2" from_port="preprocessing model" to_op="Normalize + LR S2" to_port="models in 1"/>
+      <connect from_op="Logisticka regresia S2" from_port="model" to_op="Normalize + LR S2" to_port="models in 2"/>
+      <connect from_op="Multiply S2 uc" from_port="output 2" to_op="Rozhodovaci strom S2" to_port="training set"/>
+      <connect from_op="Normalize + LR S2" from_port="model out" to_op="Apply LR S2 train" to_port="model"/>
+      <connect from_op="Multiply S2 train" from_port="output 1" to_op="Apply LR S2 train" to_port="unlabelled data"/>
+      <connect from_op="Apply LR S2 train" from_port="model" to_op="Apply LR S2 test" to_port="model"/>
+      <connect from_op="Multiply S2 test" from_port="output 1" to_op="Apply LR S2 test" to_port="unlabelled data"/>
+      <connect from_op="Apply LR S2 train" from_port="labelled data" to_op="Performance LR S2 train" to_port="labelled data"/>
+      <connect from_op="Performance LR S2 train" from_port="example set" to_op="Kontingencna LR S2 train" to_port="example set input"/>
+      <connect from_op="Kontingencna LR S2 train" from_port="example set output" to_op="Write LR S2 train" to_port="input"/>
+      <connect from_op="Apply LR S2 test" from_port="labelled data" to_op="Performance LR S2 test" to_port="labelled data"/>
+      <connect from_op="Performance LR S2 test" from_port="example set" to_op="Kontingencna LR S2 test" to_port="example set input"/>
+      <connect from_op="Kontingencna LR S2 test" from_port="example set output" to_op="Write LR S2 test" to_port="input"/>
+      <connect from_op="Rozhodovaci strom S2" from_port="model" to_op="Apply DT S2 train" to_port="model"/>
+      <connect from_op="Multiply S2 train" from_port="output 2" to_op="Apply DT S2 train" to_port="unlabelled data"/>
+      <connect from_op="Apply DT S2 train" from_port="model" to_op="Apply DT S2 test" to_port="model"/>
+      <connect from_op="Multiply S2 test" from_port="output 2" to_op="Apply DT S2 test" to_port="unlabelled data"/>
+      <connect from_op="Apply DT S2 train" from_port="labelled data" to_op="Performance DT S2 train" to_port="labelled data"/>
+      <connect from_op="Performance DT S2 train" from_port="example set" to_op="Kontingencna DT S2 train" to_port="example set input"/>
+      <connect from_op="Kontingencna DT S2 train" from_port="example set output" to_op="Write DT S2 train" to_port="input"/>
+      <connect from_op="Apply DT S2 test" from_port="labelled data" to_op="Performance DT S2 test" to_port="labelled data"/>
+      <connect from_op="Performance DT S2 test" from_port="example set" to_op="Kontingencna DT S2 test" to_port="example set input"/>
+      <connect from_op="Kontingencna DT S2 test" from_port="example set output" to_op="Write DT S2 test" to_port="input"/>
+      <connect from_op="Performance LR S1 train" from_port="performance" to_port="result 1"/>
+      <connect from_op="Performance LR S1 test" from_port="performance" to_port="result 2"/>
+      <connect from_op="Performance DT S1 train" from_port="performance" to_port="result 3"/>
+      <connect from_op="Performance DT S1 test" from_port="performance" to_port="result 4"/>
+      <connect from_op="Performance LR S2 train" from_port="performance" to_port="result 5"/>
+      <connect from_op="Performance LR S2 test" from_port="performance" to_port="result 6"/>
+      <connect from_op="Performance DT S2 train" from_port="performance" to_port="result 7"/>
+      <connect from_op="Performance DT S2 test" from_port="performance" to_port="result 8"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+      <portSpacing port="sink_result 4" spacing="0"/>
+      <portSpacing port="sink_result 5" spacing="0"/>
+      <portSpacing port="sink_result 6" spacing="0"/>
+      <portSpacing port="sink_result 7" spacing="0"/>
+      <portSpacing port="sink_result 8" spacing="0"/>
+      <portSpacing port="sink_result 9" spacing="0"/>
+    </process>
+  </operator>
+</process>
