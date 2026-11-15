@@ -10,18 +10,19 @@
     <parameter key="send_mail" value="never"/>
     <parameter key="encoding" value="SYSTEM"/>
     <process expanded="true">
-      <operator activated="true" class="retrieve" compatibility="10.0.000" expanded="true" height="68" name="Retrieve paysim_raw" width="90" x="45" y="136">
+      <operator activated="true" class="retrieve" compatibility="10.0.000" expanded="true" height="68" name="Retrieve paysim_raw" width="90" x="45" y="238">
         <parameter key="repository_entry" value="../data/paysim_raw"/>
       </operator>
-      <operator activated="true" class="generate_attributes" compatibility="10.0.000" expanded="true" height="82" name="Generate hour, fraud_num" width="90" x="179" y="136">
+      <operator activated="true" class="multiply" compatibility="10.0.000" expanded="true" height="103" name="Multiply A" width="90" x="179" y="238"/>
+      <operator activated="true" class="generate_attributes" compatibility="10.0.000" expanded="true" height="82" name="Generate hour, fraud_num" width="90" x="313" y="136">
         <list key="function_descriptions">
           <parameter key="hour" value="step % 24"/>
           <parameter key="fraud_num" value="if(isFraud==&quot;1&quot;,1,0)"/>
         </list>
         <parameter key="keep_all" value="true"/>
       </operator>
-      <operator activated="true" class="multiply" compatibility="10.0.000" expanded="true" height="145" name="Multiply" width="90" x="313" y="136"/>
-      <operator activated="true" class="aggregate" compatibility="10.0.000" expanded="true" height="82" name="Podvody podla typu" width="90" x="514" y="34">
+      <operator activated="true" class="multiply" compatibility="10.0.000" expanded="true" height="166" name="Multiply B" width="90" x="447" y="136"/>
+      <operator activated="true" class="aggregate" compatibility="10.0.000" expanded="true" height="82" name="Podvody podla typu" width="90" x="581" y="34">
         <parameter key="use_default_aggregation" value="false"/>
         <parameter key="attribute_filter_type" value="all"/>
         <parameter key="default_aggregation_function" value="average"/>
@@ -36,7 +37,7 @@
         <parameter key="only_distinct" value="false"/>
         <parameter key="ignore_missings" value="true"/>
       </operator>
-      <operator activated="true" class="aggregate" compatibility="10.0.000" expanded="true" height="82" name="Podvody podla hodiny" width="90" x="514" y="136">
+      <operator activated="true" class="aggregate" compatibility="10.0.000" expanded="true" height="82" name="Podvody podla hodiny" width="90" x="581" y="136">
         <parameter key="use_default_aggregation" value="false"/>
         <parameter key="attribute_filter_type" value="all"/>
         <parameter key="default_aggregation_function" value="average"/>
@@ -50,7 +51,7 @@
         <parameter key="only_distinct" value="false"/>
         <parameter key="ignore_missings" value="true"/>
       </operator>
-      <operator activated="true" class="aggregate" compatibility="10.0.000" expanded="true" height="82" name="Statistiky podla triedy" width="90" x="514" y="238">
+      <operator activated="true" class="aggregate" compatibility="10.0.000" expanded="true" height="82" name="Statistiky podla triedy" width="90" x="581" y="238">
         <parameter key="use_default_aggregation" value="false"/>
         <parameter key="attribute_filter_type" value="all"/>
         <parameter key="default_aggregation_function" value="average"/>
@@ -113,18 +114,71 @@
         <parameter key="append_to_file" value="false"/>
         <parameter key="encoding" value="UTF-8"/>
       </operator>
-      <connect from_op="Retrieve paysim_raw" from_port="output" to_op="Generate hour, fraud_num" to_port="example set input"/>
-      <connect from_op="Generate hour, fraud_num" from_port="example set output" to_op="Multiply" to_port="input"/>
-      <connect from_op="Multiply" from_port="output 2" to_op="Podvody podla typu" to_port="example set input"/>
-      <connect from_op="Multiply" from_port="output 3" to_op="Podvody podla hodiny" to_port="example set input"/>
-      <connect from_op="Multiply" from_port="output 4" to_op="Statistiky podla triedy" to_port="example set input"/>
+      <operator activated="true" class="select_attributes" compatibility="10.0.000" expanded="true" height="82" name="Ciselne atributy" width="90" x="581" y="340">
+        <parameter key="attribute_filter_type" value="subset"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value="amount|oldbalanceOrg|newbalanceOrig|oldbalanceDest|newbalanceDest|step|fraud_num"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+      </operator>
+      <operator activated="true" class="correlation_matrix" compatibility="10.0.000" expanded="true" height="103" name="Korelacna matica" width="90" x="715" y="340">
+        <parameter key="normalize_weights" value="true"/>
+        <parameter key="squared_correlation" value="false"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="10.0.000" expanded="true" height="103" name="Multiply C" width="90" x="313" y="442"/>
+      <operator activated="true" class="aggregate" compatibility="10.0.000" expanded="true" height="82" name="Agregacia prijemcov" width="90" x="447" y="544">
+        <parameter key="use_default_aggregation" value="false"/>
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="default_aggregation_function" value="average"/>
+        <list key="aggregation_attributes">
+          <parameter key="amount" value="count"/>
+          <parameter key="amount" value="sum"/>
+        </list>
+        <parameter key="group_by_attributes" value="nameDest"/>
+        <parameter key="count_all_combinations" value="false"/>
+        <parameter key="only_distinct" value="false"/>
+        <parameter key="ignore_missings" value="true"/>
+      </operator>
+      <operator activated="true" class="rename" compatibility="10.0.000" expanded="true" height="82" name="Premenovanie" width="90" x="581" y="544">
+        <parameter key="old_name" value="count(amount)"/>
+        <parameter key="new_name" value="dest_tx_count"/>
+        <list key="rename_additional_attributes">
+          <parameter key="sum(amount)" value="dest_total_amount"/>
+        </list>
+      </operator>
+      <operator activated="true" class="concurrency:join" compatibility="10.0.000" expanded="true" height="82" name="Join" width="90" x="715" y="442">
+        <parameter key="remove_double_attributes" value="true"/>
+        <parameter key="join_type" value="left"/>
+        <parameter key="use_id_attribute_as_key" value="false"/>
+        <list key="key_attributes">
+          <parameter key="nameDest" value="nameDest"/>
+        </list>
+        <parameter key="keep_both_join_attributes" value="false"/>
+      </operator>
+      <operator activated="true" class="store" compatibility="10.0.000" expanded="true" height="68" name="Store paysim_joined" width="90" x="849" y="442">
+        <parameter key="repository_entry" value="../data/paysim_joined"/>
+      </operator>
+      <connect from_op="Retrieve paysim_raw" from_port="output" to_op="Multiply A" to_port="input"/>
+      <connect from_op="Multiply A" from_port="output 1" to_op="Generate hour, fraud_num" to_port="example set input"/>
+      <connect from_op="Multiply A" from_port="output 2" to_op="Multiply C" to_port="input"/>
+      <connect from_op="Generate hour, fraud_num" from_port="example set output" to_op="Multiply B" to_port="input"/>
+      <connect from_op="Multiply B" from_port="output 1" to_op="Podvody podla typu" to_port="example set input"/>
+      <connect from_op="Multiply B" from_port="output 2" to_op="Podvody podla hodiny" to_port="example set input"/>
+      <connect from_op="Multiply B" from_port="output 3" to_op="Statistiky podla triedy" to_port="example set input"/>
+      <connect from_op="Multiply B" from_port="output 4" to_op="Ciselne atributy" to_port="example set input"/>
       <connect from_op="Podvody podla typu" from_port="example set output" to_op="Write typ" to_port="input"/>
       <connect from_op="Podvody podla hodiny" from_port="example set output" to_op="Write hodina" to_port="input"/>
       <connect from_op="Statistiky podla triedy" from_port="example set output" to_op="Write statistiky" to_port="input"/>
-      <connect from_op="Multiply" from_port="output 1" to_port="result 1"/>
-      <connect from_op="Write typ" from_port="through" to_port="result 2"/>
-      <connect from_op="Write hodina" from_port="through" to_port="result 3"/>
-      <connect from_op="Write statistiky" from_port="through" to_port="result 4"/>
+      <connect from_op="Ciselne atributy" from_port="example set output" to_op="Korelacna matica" to_port="example set"/>
+      <connect from_op="Multiply C" from_port="output 1" to_op="Join" to_port="left"/>
+      <connect from_op="Multiply C" from_port="output 2" to_op="Agregacia prijemcov" to_port="example set input"/>
+      <connect from_op="Agregacia prijemcov" from_port="example set output" to_op="Premenovanie" to_port="example set input"/>
+      <connect from_op="Premenovanie" from_port="example set output" to_op="Join" to_port="right"/>
+      <connect from_op="Join" from_port="join" to_op="Store paysim_joined" to_port="input"/>
+      <connect from_op="Write typ" from_port="through" to_port="result 1"/>
+      <connect from_op="Write hodina" from_port="through" to_port="result 2"/>
+      <connect from_op="Write statistiky" from_port="through" to_port="result 3"/>
+      <connect from_op="Korelacna matica" from_port="matrix" to_port="result 4"/>
       <portSpacing port="source_input 1" spacing="0"/>
       <portSpacing port="sink_result 1" spacing="0"/>
       <portSpacing port="sink_result 2" spacing="0"/>
