@@ -11,3 +11,6 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+
+# Výsledky z RapidMinera (malé tabuľky) chceme verzovať
+!reports/results/*.csv
